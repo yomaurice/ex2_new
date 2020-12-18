@@ -1,0 +1,213 @@
+package gameClient;
+
+import api.directed_weighted_graph;
+import api.edge_data;
+import api.geo_location;
+import api.node_data;
+import gameClient.util.Point3D;
+import gameClient.util.Range;
+import gameClient.util.Range2D;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * This class represents a very simple GUI class to present a
+ * game on a graph - you are welcome to use this class - yet keep in mind
+ * that the code is not well written in order to force you improve the
+ * code and not to take it "as is".
+ *
+ */
+public class MyFrame extends JFrame implements ActionListener{
+	private int _ind;
+	private Arena _ar;
+	private gameClient.util.Range2Range _w2f;
+
+	MyFrame(String a) {
+		super(a);
+		JFrame frame=new JFrame();
+		//JPanel panel=new JPanel();
+
+		frame.setTitle("pokemon game!");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(100,100);
+		frame.setResizable(true);
+
+		//frame.add(panel);
+	//	this.getContentPane().setBackground(new Color(123,50,250));
+
+		//panel.setLayout(null);
+
+		//JButton button = new JButton("submit");
+		//ActionListener clicked= new ActionEvent();
+		//button.addActionListener(this);
+
+		//Border border= BorderFactory.createLineBorder(Color.darkGray,3);
+
+//		JLabel userid = new JLabel("Enter your id:");
+//		frame.add(userid);
+//		userid.setHorizontalTextPosition(JLabel.CENTER);
+//		userid.setVerticalTextPosition(JLabel.CENTER);
+//		userid.setForeground(Color.gray);
+//		userid.setBackground(Color.white);
+//		userid.setOpaque(true);
+//		userid.setBorder(border);
+//		//userid.setHorizontalAlignment(JLabel.CENTER);
+//		userid.setVerticalAlignment(JLabel.CENTER);
+//		userid.setBounds(10,20,80,25);
+//		userid.add(button);
+//		frame.setVisible(true);
+//		JTextField userText=new JTextField(20);
+//		userText.setBounds(100,20,165,25);
+//		panel.add(userText);
+//
+//		JLabel level = new JLabel("Enter the level you want to play:");
+//		frame.add(level);
+//		level.setHorizontalTextPosition(JLabel.CENTER);
+//		level.setVerticalTextPosition(JLabel.CENTER);
+//		level.setForeground(Color.gray);
+//		level.setBackground(Color.white);
+//		level.setOpaque(true);
+//		level.setBorder(border);
+//		//userid.setHorizontalAlignment(JLabel.CENTER);
+//		level.setVerticalAlignment(JLabel.CENTER);
+//		level.setBounds(10,50,80,25);
+//		level.add(button);
+//
+//		JTextField levelText=new JTextField(20);
+//		levelText.setBounds(100,20,165,25);
+//		panel.add(levelText);
+
+		frame.setVisible(true);
+		//	this.pack();
+		int _ind = 0;
+	}
+	public void update(Arena ar) {
+		this._ar = ar;
+		updateFrame();
+	}
+
+	private void updateFrame() {
+		Range rx = new Range(20,this.getWidth()-20);
+		Range ry = new Range(this.getHeight()-10,150);
+		Range2D frame = new Range2D(rx,ry);
+		directed_weighted_graph g = _ar.getGraph();
+		_w2f = Arena.w2f(g,frame);
+	}
+	public void paintComponents(Graphics g)
+	{
+		super.paintComponents(g);
+		int w = this.getWidth();
+		int h = this.getHeight();
+
+		ImageIcon image = new ImageIcon("forest.jpg");
+		//BufferedImage img = new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
+		Image buffer_image;
+		Graphics buffer_graphics;
+		// Create a new "canvas"
+		buffer_image = createImage(w,h);
+	//	buffer_image = createImage("forest.jpg");
+		buffer_graphics=buffer_image.getGraphics();
+		paintComponents(buffer_graphics);
+
+
+		// Draw on the new "canvas"
+
+		// "Switch" the old "canvas" for the new one
+
+		g.drawImage(buffer_image, 0, 0, this);
+
+	}
+	private void drawInfo(Graphics g) {
+		List<String> str = _ar.get_info();
+		String dt = "none";
+		for(int i=0;i<str.size();i++) {
+			g.drawString(str.get(i)+" dt: "+dt,100,60+i*20);
+		}
+		
+	}
+	private void drawGraph(Graphics g) {
+		directed_weighted_graph gg = _ar.getGraph();
+		Iterator<node_data> iter = gg.getV().iterator();
+		while(iter.hasNext()) {
+			node_data n = iter.next();
+			g.setColor(Color.blue);
+			drawNode(n,5,g);
+			Iterator<edge_data> itr = gg.getE(n.getKey()).iterator();
+			while(itr.hasNext()) {
+				edge_data e = itr.next();
+				g.setColor(Color.gray);
+				drawEdge(e, g);
+			}
+		}
+	}
+	private void drawPokemons(Graphics g) {
+		List<CL_Pokemon> fs = _ar.getPokemons();
+		if(fs!=null) {
+		Iterator<CL_Pokemon> itr = fs.iterator();
+		
+		while(itr.hasNext()) {
+			
+			CL_Pokemon f = itr.next();
+			Point3D c = f.getLocation();
+			int r=10;
+			ImageIcon pickachu=new ImageIcon("RsChPan.jpg");
+			g.drawImage(pickachu.getImage(),2,20,pickachu.getImageObserver());
+			//g.setColor(Color.green);
+			if(f.getType()<0) {g.setColor(Color.orange);}
+			if(c!=null) {
+
+				geo_location fp = this._w2f.world2frame(c);
+				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
+			//	g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
+				
+			}
+		}
+		}
+	}
+	private void drawAgents(Graphics g) {
+		List<CL_Agent> rs = _ar.getAgents();
+	//	Iterator<OOP_Point3D> itr = rs.iterator();
+	//	g.setColor(Color.red);
+		ImageIcon ash=new ImageIcon("11276.jpg");
+		g.drawImage(ash.getImage(),2,20,ash.getImageObserver());
+		int i=0;
+		while(rs!=null && i<rs.size()) {
+			geo_location c = rs.get(i).getLocation();
+			int r=8;
+			i++;
+			if(c!=null) {
+
+				geo_location fp = this._w2f.world2frame(c);
+				g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
+			}
+		}
+	}
+	private void drawNode(node_data n, int r, Graphics g) {
+		geo_location pos = n.getLocation();
+		geo_location fp = this._w2f.world2frame(pos);
+		g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
+		g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-4*r);
+	}
+	private void drawEdge(edge_data e, Graphics g) {
+		directed_weighted_graph gg = _ar.getGraph();
+		geo_location s = gg.getNode(e.getSrc()).getLocation();
+		geo_location d = gg.getNode(e.getDest()).getLocation();
+		geo_location s0 = this._w2f.world2frame(s);
+		geo_location d0 = this._w2f.world2frame(d);
+		g.drawArc((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y(),20,322);
+	//	g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		float id;
+		int level;
+	}
+}
