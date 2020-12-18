@@ -29,7 +29,7 @@ public class Ex2_Client implements Runnable{
 		int scenario_num = sample.Controller.getLev();
 		//  while (scenario_num < 24) {
 		game_service game = Game_Server_Ex2.getServer(scenario_num); // you have [0,23] games
-		//int id = sample.Controller.getid();;
+		//int id = sample.controller.getid;
 		//game.login(id);
 		//        game_service game1 = new Game_ServerEx2();
 		//        game1= (Game_ServerEx2) game;
@@ -41,7 +41,7 @@ public class Ex2_Client implements Runnable{
 		String pks = game.getPokemons();
 		//directed_weighted_graph gg = game.getJava_Graph_Not_to_be_used();
 
-		init(game,gg);
+		init(game);
 
 		game.startGame();
 		_win.setTitle("Ex2 - OOP: (NONE trivial Solution) " + game.toString());
@@ -49,6 +49,11 @@ public class Ex2_Client implements Runnable{
 		long dt = 300;
 
 		while (game.isRunning()) {
+			cl_fs = Arena.json2Pokemons(game.getPokemons());
+			for(int a = 0;a<cl_fs.size();a++)
+			{
+				Arena.updateEdge(cl_fs.get(a),gg);
+			}
 			moveAgants(game, gg);
 			try {
 				if (ind % 3 == 0) {
@@ -59,6 +64,7 @@ public class Ex2_Client implements Runnable{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
 		}
 		String res = game.toString();
 		System.out.println(res);
@@ -117,6 +123,10 @@ public class Ex2_Client implements Runnable{
 				shp=gr.shortestPath(src,pokemon_dest);
 			}
 		}
+		if (shp.size()>1)
+		{
+			return shp.get(1).getKey();
+		}
 		return shp.get(0).getKey();
 
 		/*int ans = -1;
@@ -131,11 +141,11 @@ public class Ex2_Client implements Runnable{
 		return ans;*/
 	}
 
-	private void init(game_service game, directed_weighted_graph gg ) {
-		//String g = game.getGraph();
+	private void init(game_service game) {
+		String g = game.getGraph();
 		String fs = game.getPokemons();
 		//directed_weighted_graph gg = game.getJava_Graph_Not_to_be_used();
-		//directed_weighted_graph gg = GraphFromJson(g);
+		directed_weighted_graph gg = GraphFromJson(g);
 		//gg.init(g);
 		_ar = new Arena();
 		_ar.setGraph(gg);
@@ -156,19 +166,16 @@ public class Ex2_Client implements Runnable{
 			System.out.println(game.getPokemons());
 			int src_node = 0;  // arbitrary node, you should start at one of the pokemon
 			cl_fs = Arena.json2Pokemons(game.getPokemons());
-			for(int a = 0 ; a < cl_fs.size() ; a++)
+			for(int a = 0;a<cl_fs.size();a++)
 			{
 				Arena.updateEdge(cl_fs.get(a),gg);
 			}
 			for(int a = 0;a<rs;a++)
 			{
-				int ind = a % cl_fs.size();
+				int ind = a%cl_fs.size();
 				CL_Pokemon c = cl_fs.get(ind);
 				int nn = c.get_edge().getDest();
-				if(c.getType()<0)
-				{
-					nn = c.get_edge().getSrc();
-				}
+				if(c.getType()<0 ) {nn = c.get_edge().getSrc();}
 
 				game.addAgent(nn);
 			}
@@ -178,7 +185,7 @@ public class Ex2_Client implements Runnable{
 
 	public directed_weighted_graph GraphFromJson (String s) {
 		directed_weighted_graph g = new DWGraph_DS(); // constructing new graph DWGraph_DS
-		try 
+		try
 		{
 			JSONTokener buffer = new JSONTokener(s); //converting file to json tokenizer
 			JSONObject temp = new JSONObject(); //config temp json object to manipulate the buffer readings
@@ -192,7 +199,7 @@ public class Ex2_Client implements Runnable{
 
 			edgesList=(JSONArray) json_object.get("Edges"); // inserting values into both arrays using the original jason object
 			nodesList=(JSONArray) json_object.get("Nodes");
-			
+
 			for(int i=0;i<nodesList.length();i++) // going over nodes list creating the nodes inserting positions and adding later to new graph
 			{
 				node_data N=new NodeData(nodesList.getJSONObject(i).getInt("id"));

@@ -47,10 +47,10 @@ public class GeoLocation implements geo_location{
 	}
 
 	public double distance(geo_location g) {
-		double a = x*x;
-		double b = y*y;
-		double c = z*z;
-		double dist = Math.sqrt(a+b+c);
+		double a = x-g.x();
+		double b = y-g.y();
+		double c = z-g.z();
+		double dist = Math.sqrt(a*a+b*b+c*c);
 		return dist;
 	}
 
