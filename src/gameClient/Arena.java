@@ -31,7 +31,7 @@ public class Arena {
 	private static Point3D MAX = new Point3D(0, 100,0);
 
 	public Arena() {;
-		_info = new ArrayList<String>();
+	_info = new ArrayList<String>();
 	}
 	private Arena(directed_weighted_graph g, List<CL_Agent> r, List<CL_Pokemon> p) {
 		_gg = g;
@@ -130,21 +130,13 @@ public class Arena {
 
 		boolean ans = false;
 		double dist = src.distance(dest);
-		double d1 = src.distance(p) + p.distance(dest);
-		if(dist-d1<EPS2) {ans = true;}
+		double dist_src_to_pok = src.distance(p);
+		double dist_pok_to_dest = p.distance(dest);
+		double d1 = dist_src_to_pok + dist_pok_to_dest;
+		double temp_num = d1-EPS2;
+		if(dist>d1-EPS2) {ans = true;}
 		return ans;
 	}
-
-	/*public void eq_line (geo_location src, geo_location dest)
-	{
-		double x1 = src.x();
-		double x2 = dest.x();
-		double y1 = src.y();
-		double y2 = dest.y();
-		double m = (y2-y1)/(x2-x1);
-
-	}*/
-
 	private static boolean isOnEdge(geo_location p, int s, int d, directed_weighted_graph g) {
 		geo_location src = g.getNode(s).getLocation();
 		geo_location dest = g.getNode(d).getLocation();

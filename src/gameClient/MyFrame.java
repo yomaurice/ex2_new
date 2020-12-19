@@ -85,7 +85,7 @@ public class MyFrame extends JFrame implements ActionListener{
 //		panel.add(levelText);
 
 		this.setVisible(true);
-		//	this.pack();
+		this.pack();
 		int _ind = 0;
 	}
 	public void update(Arena ar) {
@@ -164,7 +164,7 @@ public class MyFrame extends JFrame implements ActionListener{
 			int r=10;
 			ImageIcon pickachu=new ImageIcon("RsChPan.jpg");
 			g.drawImage(pickachu.getImage(),2,20,pickachu.getImageObserver());
-			//g.setColor(Color.green);
+			g.setColor(Color.green);
 			if(f.getType()<0) {g.setColor(Color.orange);}
 			if(c!=null) {
 
@@ -179,7 +179,7 @@ public class MyFrame extends JFrame implements ActionListener{
 	private void drawAgents(Graphics g) {
 		List<CL_Agent> rs = _ar.getAgents();
 	//	Iterator<OOP_Point3D> itr = rs.iterator();
-	//	g.setColor(Color.red);
+		g.setColor(Color.red);
 		ImageIcon ash=new ImageIcon("11276.jpg");
 		g.drawImage(ash.getImage(),2,20,ash.getImageObserver());
 		int i=0;

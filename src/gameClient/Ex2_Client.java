@@ -47,8 +47,11 @@ public class Ex2_Client implements Runnable{
 		_win.setTitle("Ex2 - OOP: (NONE trivial Solution) " + game.toString());
 		int ind = 0;
 		long dt = 300;
-
-		while (game.isRunning()) {
+		int i = 0;
+		while (i<100)
+		{
+			game.startGame();
+			//while (game.isRunning()) {
 			cl_fs = Arena.json2Pokemons(game.getPokemons());
 			for(int a = 0;a<cl_fs.size();a++)
 			{
@@ -66,6 +69,8 @@ public class Ex2_Client implements Runnable{
 			}
 
 		}
+
+		i++;
 		String res = game.toString();
 		System.out.println(res);
 		System.exit(0);
@@ -95,7 +100,17 @@ public class Ex2_Client implements Runnable{
 			int src = ag.getSrcNode();
 			double v = ag.getValue();
 			if(dest==-1) {
-				dest = nextNode(gg, src);
+				game.startGame();
+				if (!ag.getPath().isEmpty())
+				{
+					List<node_data> list_path = ag.getPath();
+					dest = list_path.get(0).getKey();
+					list_path.remove(0);
+				}
+				else 
+				{
+					dest = nextNode(gg, src,ag);
+				}
 				game.chooseNextEdge(ag.getID(), dest);
 				System.out.println("Agent: "+id+", val: "+v+"   turned to node: "+dest);
 			}
@@ -107,14 +122,18 @@ public class Ex2_Client implements Runnable{
 	 * @param src
 	 * @return
 	 */
-	private static int nextNode(directed_weighted_graph g, int src) {
+	private static int nextNode(directed_weighted_graph g, int src,CL_Agent ag) {
 
 		double closest_node_dist=100;
-		//Collection<edge_data> ee = g.getE(src);
+		Collection<edge_data> ee = g.getE(src);
 		dw_graph_algorithms gr= new DWGraph_Algo();
 		gr.init(g);
 		List<node_data> shp= new ArrayList<node_data>();
 		for(CL_Pokemon po:cl_fs){
+			if (ag.getSrcNode()==po.get_edge().getDest())
+			{
+				return po.get_edge().getSrc();	
+			}
 			int pokemon_dest = po.get_edge().getDest();
 			double dist = gr.shortestPathDist(src,pokemon_dest);
 			if(closest_node_dist > dist)
@@ -124,8 +143,12 @@ public class Ex2_Client implements Runnable{
 			}
 		}
 		if (shp.size()>1)
-		{
-			return shp.get(1).getKey();
+		{		
+			int d = shp.get(1).getKey();
+			shp.remove(1);
+			shp.remove(0);
+			ag.setPath(shp);
+			return d;
 		}
 		return shp.get(0).getKey();
 
@@ -170,7 +193,7 @@ public class Ex2_Client implements Runnable{
 			{
 				Arena.updateEdge(cl_fs.get(a),gg);
 			}
-			for(int a = 0;a<rs;a++)
+			for(int a = 0;a<rs;a++) 
 			{
 				int ind = a%cl_fs.size();
 				CL_Pokemon c = cl_fs.get(ind);
@@ -185,7 +208,7 @@ public class Ex2_Client implements Runnable{
 
 	public directed_weighted_graph GraphFromJson (String s) {
 		directed_weighted_graph g = new DWGraph_DS(); // constructing new graph DWGraph_DS
-		try
+		try 
 		{
 			JSONTokener buffer = new JSONTokener(s); //converting file to json tokenizer
 			JSONObject temp = new JSONObject(); //config temp json object to manipulate the buffer readings
