@@ -31,13 +31,13 @@ public class MyFrame extends JFrame implements ActionListener{
 
 	MyFrame(String a) {
 		super(a);
-		JFrame frame=new JFrame();
+		//JFrame frame=new JFrame();
 		//JPanel panel=new JPanel();
 
-		frame.setTitle("pokemon game!");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(100,100);
-		frame.setResizable(true);
+		this.setTitle("pokemon game!");
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setSize(100,100);
+		this.setResizable(true);
 
 		//frame.add(panel);
 	//	this.getContentPane().setBackground(new Color(123,50,250));
@@ -84,7 +84,7 @@ public class MyFrame extends JFrame implements ActionListener{
 //		levelText.setBounds(100,20,165,25);
 //		panel.add(levelText);
 
-		frame.setVisible(true);
+		this.setVisible(true);
 		//	this.pack();
 		int _ind = 0;
 	}
@@ -100,19 +100,24 @@ public class MyFrame extends JFrame implements ActionListener{
 		directed_weighted_graph g = _ar.getGraph();
 		_w2f = Arena.w2f(g,frame);
 	}
-	public void paintComponents(Graphics g)
+	public void paint(Graphics g)
 	{
-		super.paintComponents(g);
+		super.paint(g);
 		int w = this.getWidth();
 		int h = this.getHeight();
-
+		g.clearRect(0, 0, w, h);
+		updateFrame();
+		drawPokemons(g);
+		drawGraph(g);
+		drawAgents(g);
+		drawInfo(g);
 		ImageIcon image = new ImageIcon("forest.jpg");
 		//BufferedImage img = new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
 		Image buffer_image;
 		Graphics buffer_graphics;
 		// Create a new "canvas"
 		buffer_image = createImage(w,h);
-	//	buffer_image = createImage("forest.jpg");
+		//buffer_image = createImage("forest.jpg");
 		buffer_graphics=buffer_image.getGraphics();
 		paintComponents(buffer_graphics);
 
@@ -201,7 +206,7 @@ public class MyFrame extends JFrame implements ActionListener{
 		geo_location d = gg.getNode(e.getDest()).getLocation();
 		geo_location s0 = this._w2f.world2frame(s);
 		geo_location d0 = this._w2f.world2frame(d);
-		g.drawArc((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y(),20,322);
+		g.drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
 	//	g.drawString(""+n.getKey(), fp.ix(), fp.iy()-4*r);
 	}
 

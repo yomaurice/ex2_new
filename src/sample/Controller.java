@@ -16,12 +16,13 @@ public class Controller {
 
 
     public void myClick(ActionEvent actionEvent) {
+
+        id=Integer.parseInt(userid.getText());
+        lev=Integer.parseInt(level.getText());
         Ex2_Client.main(new String[3]);
-        id=parseInt(userid.getText());
-        lev=parseInt(level.getText());
 
     }
-    public int getid(){
+    public static int getid(){
         return id;
     }
     public static int getLev(){
