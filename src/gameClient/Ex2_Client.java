@@ -33,7 +33,7 @@ public class Ex2_Client implements Runnable{
 		int scenario_num = sample.Controller.getLev();
 		//  while (scenario_num < 24) {
 		game_service game = Game_Server_Ex2.getServer(scenario_num); // you have [0,23] games
-		int id = sample.controller.getid();
+		int id = sample.Controller.getid();
 		game.login(id);
 		//        game_service game1 = new Game_ServerEx2();
 		//        game1= (Game_ServerEx2) game;
