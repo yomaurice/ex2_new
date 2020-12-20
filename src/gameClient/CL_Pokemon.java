@@ -10,6 +10,9 @@ public class CL_Pokemon {
 	private Point3D _pos;
 	private double min_dist;
 	private int min_ro;
+	private String want_to_eat_me = "NO";
+	private int my_agent_id =999;
+			
 
 	public CL_Pokemon(Point3D p, int t, double v, double s, edge_data e) {
 		_type = t;
@@ -66,5 +69,17 @@ public class CL_Pokemon {
 
 	public void setMin_ro(int min_ro) {
 		this.min_ro = min_ro;
+	}
+	public String getWant_to_eat_me() {
+		return want_to_eat_me;
+	}
+	public void setWant_to_eat_me(String want_to_eat_me) {
+		this.want_to_eat_me = want_to_eat_me;
+	}
+	public int getMy_agent_id() {
+		return my_agent_id;
+	}
+	public void setMy_agent_id(int my_agent_id) {
+		this.my_agent_id = my_agent_id;
 	}
 }
