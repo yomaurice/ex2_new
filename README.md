@@ -7,7 +7,7 @@ In this assignment we were asked to code a pokemon game. the game works like thi
 when you run the program, a window will come up asking you to enter your id and the level you would like to play.
 this code was done using javafx scene builder. the window is as shown in the pic below.
 
-The game is a robotic one, where the computer playes bty itself and treis to get the best score. 
+The game is a robotic one, where the computer playes by itself and tries to get the best score. 
 Whilst the game is running there is no humen interfeirence! 
 once you hit the start game button- the game will commence.
 in the game there are 24 levels (0-23), and the level differ from each-other by the graphs, amount of agents,amount of pokemon and time for level.
