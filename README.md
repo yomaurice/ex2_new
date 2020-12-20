@@ -5,7 +5,7 @@ gui
 Game explanation:
 In this assignment we were asked to code a pokemon game. the game works like this:
 when you run the program, a window will come up asking you to enter your id and the level you would like to play.
-this code was done using javafx scene builder. the window is as shown in the pic below.
+this code was done using javafx scene builder.
 
 The game is a robotic one, where the computer playes by itself and tries to get the best score. 
 Whilst the game is running there is no humen interfeirence! 
