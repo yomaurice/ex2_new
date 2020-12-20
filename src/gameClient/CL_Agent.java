@@ -24,7 +24,6 @@ public class CL_Agent {
 	private directed_weighted_graph _gg;
 	private CL_Pokemon _curr_fruit;
 	private long _sg_dt;
-	private List<node_data> list_of_puth = new ArrayList<node_data>();
 
 
 	private double _value;
@@ -120,14 +119,6 @@ public class CL_Agent {
 		return this._value;
 	}
 
-	public List<node_data> getPath(){
-		return list_of_puth;
-	}
-
-	public void setPath(List<node_data> l)
-	{
-		this.list_of_puth = l;
-	}
 
 	public int getNextNode() {
 		int ans = -2;
