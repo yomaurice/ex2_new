@@ -41,7 +41,7 @@ public class DWGraph_Algo implements dw_graph_algorithms {
 
 	//empty constructor
 	public DWGraph_Algo() {
-		directed_weighted_graph gr = new DWGraph_DS();
+		gr = new DWGraph_DS();
 		fathers = new HashMap<node_data, node_data>();
 	}
 
@@ -140,6 +140,84 @@ public class DWGraph_Algo implements dw_graph_algorithms {
 		}
 	}
 
+	public List<Integer> DFS(int src) 
+	{
+		node_data node = gr.getNode(src);
+		Iterator<node_data> ite = gr.getV().iterator();
+		while (ite.hasNext()) {
+			node_data N = ite.next();
+			//N.setTag(-1);
+			N.setInfo("unvisited");
+		}
+		Queue<node_data> que = new LinkedList<node_data>();
+		List<Integer> result_list = new ArrayList<Integer>();
+		node.setInfo("visited");
+		que.add(node);
+		result_list.add(node.getKey());
+		//node.setTag(0);
+		nodeCounter++;
+		while (!que.isEmpty()) {
+			NodeData current_node = (NodeData) que.peek();
+			Iterator<node_data> neighbor  = current_node.getNi().iterator();
+			while (neighbor.hasNext())
+			{
+				node_data n = neighbor.next();
+				if (n.getInfo()!="visited")
+				{
+					que.add(n);
+					result_list.add(n.getKey());
+					break;
+				}
+			}
+			if (que.peek()==current_node)
+			{
+				que.remove(current_node);
+			}
+		}
+		return result_list;
+	}
+	
+	public List<Integer> ConnectedComponent (int id) 
+	{
+		if (gr.getNode(id)!=null)
+		{
+			List<List<Integer>> list_components = ConnectedComponents();
+			for (int i=0;i<list_components.size()-1;i++)
+			{
+				List<Integer> sub_list = list_components.get(i);
+				if (sub_list.contains(id))
+				{
+					return sub_list;
+				}
+			}
+		}
+		return null;
+	}
+
+	public List<List<Integer>> ConnectedComponents () 
+	{
+		if (gr!=null)
+		{
+			Iterator<node_data> ite = gr.getV().iterator();
+			node_data src_node = ite.next();
+			List<Integer> list_comp = new ArrayList<Integer>();
+			list_comp = DFS(src_node.getKey());
+			ReversGraph();
+			List<List<Integer>> all_scc = new ArrayList<List<Integer>>();
+			for (int i=0; i <list_comp.size()-1 ;i++)
+			{
+				//node_data t = list_comp.get(i);
+				List<Integer> temp_list = new ArrayList<Integer>();
+				temp_list = DFS(list_comp.get(i));
+				all_scc.add(temp_list);
+			}
+			ReversGraph();
+			return all_scc;
+		}
+		return null;
+	}
+
+
 	@Override
 	public boolean isConnected() {
 		if (gr.nodeSize() <= 1) return true;
@@ -153,7 +231,8 @@ public class DWGraph_Algo implements dw_graph_algorithms {
 			if (nodeCounter != gr.nodeSize()) return false;
 			else
 			{
-				Iterator<node_data> ite1 = ReversGraph().getV().iterator();
+				ReversGraph();
+				Iterator<node_data> ite1 = gr.getV().iterator();
 				while (ite1.hasNext())
 				{
 					node_data node = ite.next();
@@ -163,16 +242,18 @@ public class DWGraph_Algo implements dw_graph_algorithms {
 						BFS(node);
 						if (src_node.getInfo()!="visited")
 						{
+							ReversGraph();
 							return false;
 						}
 					}
 				}
 			}
+			ReversGraph();
 			return true;
 		}
 	}
 
-	public directed_weighted_graph ReversGraph()
+	public void ReversGraph()
 	{
 		directed_weighted_graph reverse_graph = new DWGraph_DS();
 		Iterator<node_data> ite = gr.getV().iterator();
@@ -190,7 +271,7 @@ public class DWGraph_Algo implements dw_graph_algorithms {
 			double w = edge.getWeight();
 			reverse_graph.connect(src, dest, w);
 		}
-		return reverse_graph;
+		init (reverse_graph);
 	}
 
 	@Override
